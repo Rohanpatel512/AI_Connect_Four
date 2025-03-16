@@ -61,7 +61,17 @@ class Connect4GUI:
             # Force the canvas to update and display the new piece
             self.canvas.update()
             
-            if self.check_win(self.board, row, col, self.current_player):
+            win_result = self.check_win(self.board, row, col, self.current_player)
+            if win_result:
+                # Draw the winning line if there’s a win
+                start_row, start_col, end_row, end_col = win_result[1]
+                x1 = start_col * CELL_SIZE + CELL_SIZE // 2
+                y1 = start_row * CELL_SIZE + CELL_SIZE // 2
+                x2 = end_col * CELL_SIZE + CELL_SIZE // 2
+                y2 = end_row * CELL_SIZE + CELL_SIZE // 2
+                self.canvas.create_line(x1, y1, x2, y2, fill="black", width=3)
+                self.canvas.update()
+                
                 winner = "Player 1 (Red)" if self.current_player == 1 else "Player 2 (Yellow)"
                 messagebox.showinfo("Game Over", f"{winner} wins!")
                 self.play_game()  # Reset instead of ending
@@ -89,25 +99,32 @@ class Connect4GUI:
 
     def check_win(self, board, row, col, player):
         # Checks if the last move created a winning condition (4 in a row)
+        # Returns (True, (start_row, start_col, end_row, end_col)) if win, False otherwise
         rows, cols = len(board), len(board[0])
         
         # Check horizontal
         count = 0
+        start_col = end_col = col
         for c in range(cols):
             if board[row][c] == player:
                 count += 1
+                end_col = c
                 if count == 4:
-                    return True
+                    start_col = end_col - 3
+                    return True, (row, start_col, row, end_col)
             else:
                 count = 0
 
         # Check vertical
         count = 0
+        start_row = end_row = row
         for r in range(rows):
             if board[r][col] == player:
                 count += 1
+                end_row = r
                 if count == 4:
-                    return True
+                    start_row = end_row - 3
+                    return True, (start_row, col, end_row, col)
             else:
                 count = 0
 
@@ -118,12 +135,15 @@ class Connect4GUI:
         while r > 0 and c > 0:
             r -= 1
             c -= 1
+        start_row, start_col = r, c
         # Count consecutive pieces along diagonal
         while r < rows and c < cols:
             if board[r][c] == player:
                 count += 1
+                end_row, end_col = r, c
                 if count == 4:
-                    return True
+                    start_row, start_col = end_row - 3, end_col - 3
+                    return True, (start_row, start_col, end_row, end_col)
             else:
                 count = 0
             r += 1
@@ -136,12 +156,15 @@ class Connect4GUI:
         while r > 0 and c < cols - 1:
             r -= 1
             c += 1
+        start_row, start_col = r, c
         # Count consecutive pieces along diagonal
         while r < rows and c >= 0:
             if board[r][c] == player:
                 count += 1
+                end_row, end_col = r, c
                 if count == 4:
-                    return True
+                    start_row, start_col = end_row - 3, end_col + 3
+                    return True, (start_row, start_col, end_row, end_col)
             else:
                 count = 0
             r += 1
