@@ -56,19 +56,21 @@ class Connect4GUI:
         col = event.x // CELL_SIZE
         if self.is_valid_move(self.board, col):
             row = self.drop_piece(self.board, col, self.current_player)
+            # Draw the board first to show the latest piece
+            self.print_board()
+            # Force the canvas to update and display the new piece
+            self.canvas.update()
+            
             if self.check_win(self.board, row, col, self.current_player):
-                self.print_board()
                 winner = "Player 1 (Red)" if self.current_player == 1 else "Player 2 (Yellow)"
                 messagebox.showinfo("Game Over", f"{winner} wins!")
                 self.play_game()  # Reset instead of ending
             elif self.is_board_full(self.board):
-                self.print_board()
                 messagebox.showinfo("Game Over", "It's a tie!")
                 self.play_game()  # Reset instead of ending
             else:
                 # Switch players
                 self.current_player = 2 if self.current_player == 1 else 1
-                self.print_board()
 
     def is_valid_move(self, board, col):
         # Checks if a move is valid:
