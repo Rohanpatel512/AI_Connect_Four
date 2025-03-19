@@ -1,4 +1,5 @@
 import tkinter as tk
+import random # random move for tie case
 from tkinter import messagebox
 
 # Define grid dimensions as variables (can be changed here)
@@ -181,6 +182,66 @@ class Connect4GUI:
         self.board = create_board(ROWS, COLS)
         self.current_player = 1  # Player 1 starts
         self.print_board()
+
+    '''
+    implementation
+    _,ai_move = self.minimax(self.board, 4, float('-inf'), float('inf'), True)
+        depth: where 4 is the depth / how far the AI looks ahead
+        alpha: best score ai maxing player can guarantee prune bad moves
+        beta: best score oponent can guarantee using alpha to elim unecessar calcs
+        maximizing_player: True if ai is maximizing player, False human player is playing AI assumes they will minimize AI score
+    beta 
+    '''
+    def evaluate_board(self ,board, player):
+        # basic evl function: prior center, block opponent and win
+        opponent = 1 if player == 2 else 2
+        score = 0
+        
+        # prior center column
+        center_col = COLS // 2
+        center_count = sum([1 for row in range(ROWS) if board[row][center_col] == player])
+        score += center_count * 3
+        
+        # check for w/l conditions
+        if any(self.check_win(board, row, col, player) for row in range(ROWS) for col in range(COLS)):
+            return 1000
+        if any(self.check_win(board, row, col, opponent) for row in range(ROWS) for col in range(COLS)):
+            return -1000
+        
+        return score
+
+    def minimax(self, board, depth, alpha, beta, maximizing_player):
+        if depth == 0 or self.is_board_full(board):
+            return self.evaluate_board(self, board, 2 if maximizing_player else 1), None
+        valid_moves = [col for col in range(COLS) if self.is_valid_move(board, col)]
+        if maximizing_player:
+            max_eval = float('-inf')
+            best_move = random.choice(valid_moves)
+            for col in valid_moves:
+                temp_board = [row[:] for row in board]
+                row = self.drop_piece(temp_board, col, 2)
+                eval_score, _ = self.minimax(temp_board, depth - 1, alpha, beta, False)
+                if eval_score > max_eval:
+                    max_eval = eval_score
+                    best_move = col
+                alpha = max(alpha, eval_score)
+                if beta <= alpha:
+                    break
+            return max_eval, best_move
+        else:
+            min_eval = float('inf')
+            best_move = random.choice(valid_moves)
+            for col in valid_moves:
+                temp_board = [row[:] for row in board]
+                row = self.drop_piece(temp_board, col, 1)
+                eval_score, _ = self.minimax(temp_board, depth - 1, alpha, beta, True)
+                if eval_score < min_eval:
+                    min_eval = eval_score
+                    best_move = col
+                beta = min(beta, eval_score)
+                if beta <= alpha:
+                    break
+            return min_eval, best_move
 
 def main():
     root = tk.Tk()
