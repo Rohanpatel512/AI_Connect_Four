@@ -186,9 +186,9 @@ class Connect4GUI:
     '''
     implementation
     _,ai_move = self.minimax(self.board, 4, float('-inf'), float('inf'), True)
-        depth: where 4 is the depth / how far the AI looks ahead
+        depth: where 4 is the depth / how far the AI looks ahead higher depths = longer time
         alpha: best score ai maxing player can guarantee prune bad moves
-        beta: best score oponent can guarantee using alpha to elim unecessar calcs
+        beta: best score oponent can guarantee using alpha to elim unecessar calcs 
         maximizing_player: True if ai is maximizing player, False human player is playing AI assumes they will minimize AI score
     beta 
     '''
