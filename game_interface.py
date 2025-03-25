@@ -1,10 +1,11 @@
+import random
+import numpy as np
 import tkinter as tk
-import random # random move for tie case
 from tkinter import messagebox
+
 from game import ConnectFour
 from game_ai import AI_player
 from game_gemini import gemini_minimax
-import numpy as np
 
 # Define grid dimensions as variables (can be changed here)
 ROWS = 6  # Number of rows
@@ -22,7 +23,7 @@ class Connect4GUI:
         self.master = master
         self.master.title("Connect 4")
 
-        # Model to play against
+        # Model to play
         self.model = model
         
         # Create game board
