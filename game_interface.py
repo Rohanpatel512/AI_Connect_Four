@@ -169,7 +169,7 @@ Input: """)
     elif selection == "g" or selection == "gemini":
         model = "gemini-1.5-pro" # Default Gemini model variant
     elif selection == "c" or selection == "custom":
-        model = input("Please input the Gemini model variant you would like to work with: ")
+        model = input("\nPlease input the Gemini model variant you would like to work with.\nMake sure your input is in kebab case (ie. gemini-2.0-flash for Gemini 2.0 Flash)!\n\n")
     else:
         model = "minimax" # Default
     
