@@ -1,5 +1,5 @@
 # Imports
-from math import random 
+import random
 
 # Constants
 ROWS = 6
@@ -8,7 +8,7 @@ CELL_SIZE = 80
 
 class AI_player:
 
-    def evaluate_board(self ,board, player):
+    def evaluate_board(self, game, board, player):
         # basic evl function: prior center, block opponent and win
         opponent = 1 if player == 2 else 2
         score = 0
@@ -19,24 +19,24 @@ class AI_player:
         score += center_count * 3
         
         # check for w/l conditions
-        if any(self.check_win(board, row, col, player) for row in range(ROWS) for col in range(COLS)):
+        if any(game.check_win(board, row, col, player) for row in range(ROWS) for col in range(COLS)):
             return 1000
-        if any(self.check_win(board, row, col, opponent) for row in range(ROWS) for col in range(COLS)):
+        if any(game.check_win(board, row, col, opponent) for row in range(ROWS) for col in range(COLS)):
             return -1000
         
         return score
 
-    def minimax(self, board, depth, alpha, beta, maximizing_player):
-        if depth == 0 or self.is_board_full(board):
-            return self.evaluate_board(self, board, 2 if maximizing_player else 1), None
-        valid_moves = [col for col in range(COLS) if self.is_valid_move(board, col)]
+    def minimax(self, game, board, depth, alpha, beta, maximizing_player):
+        if depth == 0 or game.is_board_full(board):
+            return self.evaluate_board(game, board, 2 if maximizing_player else 1), None
+        valid_moves = [col for col in range(COLS) if game.is_valid_move(board, col)]
         if maximizing_player:
             max_eval = float('-inf')
             best_move = random.choice(valid_moves)
             for col in valid_moves:
-                temp_board = [row[:] for row in board]
-                row = self.drop_piece(temp_board, col, 2)
-                eval_score, _ = self.minimax(temp_board, depth - 1, alpha, beta, False)
+                board = [row[:] for row in board]
+                row = game.drop_piece(board, col, 2)
+                eval_score, _ = self.minimax(game, board, depth - 1, alpha, beta, True)
                 if eval_score > max_eval:
                     max_eval = eval_score
                     best_move = col
@@ -48,9 +48,9 @@ class AI_player:
             min_eval = float('inf')
             best_move = random.choice(valid_moves)
             for col in valid_moves:
-                temp_board = [row[:] for row in board]
-                row = self.drop_piece(temp_board, col, 1)
-                eval_score, _ = self.minimax(temp_board, depth - 1, alpha, beta, True)
+                board = [row[:] for row in board]
+                row = game.drop_piece(board, col, 1)
+                eval_score, _ = self.minimax(game, board, depth - 1, alpha, beta, True)
                 if eval_score < min_eval:
                     min_eval = eval_score
                     best_move = col
