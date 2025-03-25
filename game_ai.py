@@ -1,5 +1,6 @@
 # Imports
 import random
+import copy 
 
 # Constants
 ROWS = 6
@@ -32,25 +33,27 @@ class AI_player:
         valid_moves = [col for col in range(COLS) if game.is_valid_move(board, col)]
         if maximizing_player:
             max_eval = float('-inf')
-            best_move = random.choice(valid_moves)
             for col in valid_moves:
-                board = [row[:] for row in board]
-                row = game.drop_piece(board, col, 2)
-                eval_score, _ = self.minimax(game, board, depth - 1, alpha, beta, True)
+                temp_board = copy.deepcopy(board)
+                row = game.drop_piece(temp_board, col, 2)
+
+                eval_score, _ = self.minimax(game, temp_board, depth - 1, alpha, beta, False)
+
                 if eval_score > max_eval:
                     max_eval = eval_score
                     best_move = col
+
                 alpha = max(alpha, eval_score)
                 if beta <= alpha:
                     break
             return max_eval, best_move
+
         else:
             min_eval = float('inf')
-            best_move = random.choice(valid_moves)
             for col in valid_moves:
-                board = [row[:] for row in board]
-                row = game.drop_piece(board, col, 1)
-                eval_score, _ = self.minimax(game, board, depth - 1, alpha, beta, True)
+                temp_board = copy.deepcopy(board)
+                row = game.drop_piece(temp_board, col, 1)
+                eval_score, _ = self.minimax(game, temp_board, depth - 1, alpha, beta, True)
                 if eval_score < min_eval:
                     min_eval = eval_score
                     best_move = col
