@@ -2,6 +2,7 @@ import tkinter as tk
 import random # random move for tie case
 from tkinter import messagebox
 from game import ConnectFour
+from game_ai import AI_player
 
 # Define grid dimensions as variables (can be changed here)
 ROWS = 6  # Number of rows
@@ -22,6 +23,7 @@ class Connect4GUI:
         # Create game board
         self.board = create_board(ROWS, COLS)
         self.current_player = 1  # Player 1 starts
+        self.ai_player = AI_player() # Player 2 (AI player)
         
         # Create canvas for game board instead of console output
         self.canvas = tk.Canvas(master, width=COLS*CELL_SIZE, height=ROWS*CELL_SIZE)
@@ -44,8 +46,8 @@ class Connect4GUI:
                 y1 = row * CELL_SIZE
                 x2 = x1 + CELL_SIZE
                 y2 = y1 + CELL_SIZE
-                self.canvas.create_rectangle(x1, y1, x2, y2, fill="white", outline="black")
-                
+                self.canvas.create_rectangle(x1, y1, x2, y2, fill="white", outline="black")   
+
                 # Draw pieces instead of text symbols
                 if self.board[row][col] == 0:
                     pass  # Empty space (white rectangle is enough)
@@ -53,6 +55,7 @@ class Connect4GUI:
                     self.canvas.create_oval(x1+5, y1+5, x2-5, y2-5, fill="red")
                 else:
                     self.canvas.create_oval(x1+5, y1+5, x2-5, y2-5, fill="yellow")
+
 
     def handle_click(self, event):
         # Handles mouse clicks instead of console input
@@ -84,6 +87,25 @@ class Connect4GUI:
             else:
                 # Switch players
                 self.current_player = 2 if self.current_player == 1 else 1
+                eval, col = self.ai_player.minimax(self.game, self.board, 4, float('-inf'), float('inf'), True)
+                self.draw_ai_piece(col)
+        
+    def draw_ai_piece(self, col):
+        """
+        Helper method to draw AI's coin
+        onto the GUI game board.
+        """
+
+        for row in range(ROWS):
+            x1 = col * CELL_SIZE
+            y1 = row * CELL_SIZE
+            x2 = x1 + CELL_SIZE
+            y2 = y1 + CELL_SIZE
+            if self.board[row][col] == 2:
+                print("Condition is satisfied!")
+                #self.canvas.create_oval(x1+5, y1+5, x2-5, y2-5, fill="yellow")
+            
+        self.canvas.update()
 
     def play_game(self):
         # Main game loop (now resets the GUI game)
