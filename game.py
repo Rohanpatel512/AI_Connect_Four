@@ -7,7 +7,7 @@ class ConnectFour:
         return col >= 0 and col < len(board[0]) and board[0][col] == 0
 
     def drop_piece(self, board, col, player):
-        print("The Board before dropping: ", np.array(board))
+        print(f"Game board:\n{np.array(board)}")
         # Drops a player's piece into the specified column
         # Returns the row where it lands, or -1 if invalid
         for row in range(len(board) - 1, -1, -1):  # Start from bottom
