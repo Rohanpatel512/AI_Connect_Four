@@ -23,7 +23,7 @@ pip install -r requirements.txt
 ## Connecting the API
 *Note: You will need a stable internet connection to connect to the Gemini API.*
 
-4. a) Get and add your key at [Google AI Studio](https://aistudio.google.com/):
+4. a) Get a API key at [Google AI Studio](https://aistudio.google.com/):
    
     ![image](https://github.com/user-attachments/assets/844e1816-4920-4670-8ef1-25c71dae8083)
 
