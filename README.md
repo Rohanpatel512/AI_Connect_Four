@@ -4,23 +4,23 @@ Presented by Group 23 of Winter 2025 CP468-C, this repository is our group's imp
 ## Setup and Install
 To run the Python code, you must install [Git](https://git-scm.com/downloads) and [Python](https://www.python.org/).
 
-1. Install the google-genai package:
-```bash
-pip install -q -U google-genai
+1. Install dependencies:
+```shell
+pip install -r requirements.txt
 ```
 
 2. Clone the repository:
-```bash
+```shell
 git clone https://github.com/Rohanpatel512/AI_Connect_Four.git
 ```
 
 3. Change to directory:
-```bash
+```shell
 cd AI_Connect_Four
 ```
 
 4. Run game_interface.py:
-```bash
+```shell
 py game_interface.py
 ```
 
