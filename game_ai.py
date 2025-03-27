@@ -31,21 +31,22 @@ class AI_player:
         if depth == 0 or game.is_board_full(board):
             return self.evaluate_board(game, board, 2 if maximizing_player else 1), None
         valid_moves = [col for col in range(COLS) if game.is_valid_move(board, col)]
+
         if maximizing_player:
             max_eval = float('-inf')
             for col in valid_moves:
                 temp_board = copy.deepcopy(board)
                 row = game.drop_piece(temp_board, col, 2)
-
                 eval_score, _ = self.minimax(game, temp_board, depth - 1, alpha, beta, False)
 
                 if eval_score > max_eval:
                     max_eval = eval_score
                     best_move = col
-
                 alpha = max(alpha, eval_score)
+
                 if beta <= alpha:
                     break
+
             return max_eval, best_move
 
         else:
@@ -54,10 +55,14 @@ class AI_player:
                 temp_board = copy.deepcopy(board)
                 row = game.drop_piece(temp_board, col, 1)
                 eval_score, _ = self.minimax(game, temp_board, depth - 1, alpha, beta, True)
+
                 if eval_score < min_eval:
                     min_eval = eval_score
                     best_move = col
+
                 beta = min(beta, eval_score)
+
                 if beta <= alpha:
                     break
+
             return min_eval, best_move
